@@ -61,3 +61,5 @@ crashlytics-build.properties
 # Rider
 .idea/
 
+# CliffAssets
+Assets/Cliff/Originals*
