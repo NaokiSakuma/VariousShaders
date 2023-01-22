@@ -1,63 +1,68 @@
 ﻿using System;
 using UnityEngine;
 
-public class GBufferOnlyRendering : MonoBehaviour
+namespace GBuffer
 {
-    [SerializeField] private Camera gBufferCamera;
-    [SerializeField] private Material material;
-    [SerializeField] private GBuffer gBufferStatus;
-
-    private GBuffer _oldGBuffer;
-    private enum GBuffer
+    public class GBufferOnlyRendering : MonoBehaviour
     {
-        _GB_DIFF,
-        _GB_SPEC,
-        _GB_NORM,
-        _GB_LIGHT,
-        _GB_DEPTH,
-        _GB_SHADOW
-    }
+        [SerializeField] private Camera gBufferCamera;
+        [SerializeField] private Material material;
+        [SerializeField] private GBuffer gBufferStatus;
 
-    private void Start()
-    {
-        gBufferCamera.depthTextureMode |= DepthTextureMode.Depth;
-        _oldGBuffer = gBufferStatus;
-        ChangeGBuffer();
-    }
+        private GBuffer _oldGBuffer;
 
-    [ImageEffectOpaque]
-    private void OnRenderImage(RenderTexture src, RenderTexture dest)
-    {
-        Graphics.Blit(src, dest, material);
-    }
-
-    private void OnValidate()
-    {
-        ChangeGBuffer();
-    }
-
-    /// <summary>
-    /// GBufferの切り替え
-    /// </summary>
-    private void ChangeGBuffer()
-    {
-        switch (gBufferStatus)
+        private enum GBuffer
         {
-            case GBuffer._GB_DIFF :
-            case GBuffer._GB_SPEC :
-            case GBuffer._GB_NORM :
-            case GBuffer._GB_LIGHT :
-            case GBuffer._GB_DEPTH :
-                gBufferCamera.renderingPath = RenderingPath.DeferredShading;
-                break;
-            case GBuffer._GB_SHADOW :
-                gBufferCamera.renderingPath = RenderingPath.Forward;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
+            _GB_DIFF,
+            _GB_SPEC,
+            _GB_NORM,
+            _GB_LIGHT,
+            _GB_DEPTH,
+            _GB_SHADOW
         }
-        material.DisableKeyword(_oldGBuffer.ToString());
-        material.EnableKeyword(gBufferStatus.ToString());
-        _oldGBuffer = gBufferStatus;
+
+        private void Start()
+        {
+            gBufferCamera.depthTextureMode |= DepthTextureMode.Depth;
+            _oldGBuffer = gBufferStatus;
+            ChangeGBuffer();
+        }
+
+        [ImageEffectOpaque]
+        private void OnRenderImage(RenderTexture src, RenderTexture dest)
+        {
+            Graphics.Blit(src, dest, material);
+        }
+
+        private void OnValidate()
+        {
+            ChangeGBuffer();
+        }
+
+        /// <summary>
+        /// GBufferの切り替え
+        /// </summary>
+        private void ChangeGBuffer()
+        {
+            switch (gBufferStatus)
+            {
+                case GBuffer._GB_DIFF:
+                case GBuffer._GB_SPEC:
+                case GBuffer._GB_NORM:
+                case GBuffer._GB_LIGHT:
+                case GBuffer._GB_DEPTH:
+                    gBufferCamera.renderingPath = RenderingPath.DeferredShading;
+                    break;
+                case GBuffer._GB_SHADOW:
+                    gBufferCamera.renderingPath = RenderingPath.Forward;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            material.DisableKeyword(_oldGBuffer.ToString());
+            material.EnableKeyword(gBufferStatus.ToString());
+            _oldGBuffer = gBufferStatus;
+        }
     }
 }
