@@ -1,4 +1,4 @@
-﻿Shader "GBufferOnlyRendering"
+﻿Shader "GBuffer/GBufferOnlyRendering"
 {
     Properties
     {
