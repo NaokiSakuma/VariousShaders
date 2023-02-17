@@ -25,3 +25,8 @@
 
 [階層](https://github.com/NaokiSakuma/VariousShaders/tree/main/Assets/FullScreenShaderGraph)
 [解説](https://zenn.dev/sakutaro/articles/full_screen_shader_graph)
+
+## URP14でのBlitAPI
+
+[階層](https://github.com/NaokiSakuma/VariousShaders/tree/blit/Assets/Blit)
+[解説](https://zenn.dev/sakutaro/articles/bliter_api_change)
