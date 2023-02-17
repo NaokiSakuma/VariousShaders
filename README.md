@@ -28,5 +28,5 @@
 
 ## URP14でのBlitAPI
 
-[階層](https://github.com/NaokiSakuma/VariousShaders/tree/blit/Assets/Blit)
+[階層](https://github.com/NaokiSakuma/VariousShaders/tree/main/Assets/Blit)
 [解説](https://zenn.dev/sakutaro/articles/bliter_api_change)
