@@ -26,7 +26,12 @@
 [階層](https://github.com/NaokiSakuma/VariousShaders/tree/main/Assets/FullScreenShaderGraph)
 [解説](https://zenn.dev/sakutaro/articles/full_screen_shader_graph)
 
-## URP14でのBlitAPI
+## URP14でのBlitterAPI
 
 [階層](https://github.com/NaokiSakuma/VariousShaders/tree/main/Assets/Blit)
 [解説](https://zenn.dev/sakutaro/articles/bliter_api_change)
+
+## 既存のRendererFeatureをBlitterAPIに対応する
+
+[階層](https://github.com/NaokiSakuma/VariousShaders/tree/main/Assets/ConvertBlitter)
+[解説](https://zenn.dev/sakutaro/articles/convert_blitter)
