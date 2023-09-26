@@ -35,3 +35,8 @@
 
 [階層](https://github.com/NaokiSakuma/VariousShaders/tree/main/Assets/ConvertBlitter)
 [解説](https://zenn.dev/sakutaro/articles/convert_blitter)
+
+## ノーマルマップのブレンド
+
+[階層](https://github.com/NaokiSakuma/VariousShaders/tree/main/Assets/NormalMapBlend)
+[解説](https://zenn.dev/sakutaro/articles/normalmap_blend)
