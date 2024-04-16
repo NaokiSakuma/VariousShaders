@@ -35,4 +35,13 @@ public class Hogeeee : ScriptableRendererFeature
     {
         shader = Shader.Find("GrayScale");
     }
+
+#if UNITY_2022_2_OR_NEWER
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        grayscalePass?.Dispose();
+        grayscalePass = null;
+    }
+#endif
 }

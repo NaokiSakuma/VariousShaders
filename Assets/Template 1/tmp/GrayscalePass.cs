@@ -35,35 +35,44 @@ public class GrayscalePass : ScriptableRenderPass
         cameraColorTarget = target;
     }
 
-public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
-{
-    if (renderingData.cameraData.isSceneViewCamera)
+    public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
     {
-        return;
+        if (renderingData.cameraData.isSceneViewCamera)
+        {
+            return;
+        }
+
+        var cmd = CommandBufferPool.Get(ProfilerTag);
+
+        var descriptor = renderingData.cameraData.cameraTargetDescriptor;
+        descriptor.depthBufferBits = 0;
+
+        using (new ProfilingScope(cmd, profilingSampler))
+        {
+    #if UNITY_2022_2_OR_NEWER
+            // RenderingUtils.ReAllocateIfNeededでRenderTextureを確保する
+            RenderingUtils.ReAllocateIfNeeded(ref tmpRenderTargetHandle, descriptor, name: "_TempRT");
+            Blit(cmd, cameraColorTarget, tmpRenderTargetHandle, material);
+            Blit(cmd, tmpRenderTargetHandle, cameraColorTarget);
+            // MEMO : この例だとBlit(cmd, ref renderingData, material);の方が好ましい
+    #else
+            cmd.GetTemporaryRT(tmpRenderTargetHandle.id, descriptor);
+            cmd.Blit(cameraColorTarget, tmpRenderTargetHandle.Identifier(), material);
+            cmd.Blit(tmpRenderTargetHandle.Identifier(), cameraColorTarget);
+            cmd.ReleaseTemporaryRT(tmpRenderTargetHandle.id);
+    #endif
+        }
+
+        context.ExecuteCommandBuffer(cmd);
+        CommandBufferPool.Release(cmd);
     }
-
-    var cmd = CommandBufferPool.Get(ProfilerTag);
-
-    var descriptor = renderingData.cameraData.cameraTargetDescriptor;
-    descriptor.depthBufferBits = 0;
-
-    using (new ProfilingScope(cmd, profilingSampler))
-    {
+    
 #if UNITY_2022_2_OR_NEWER
-        // RenderingUtils.ReAllocateIfNeededでRenderTextureを確保する
-        RenderingUtils.ReAllocateIfNeeded(ref tmpRenderTargetHandle, descriptor);
-        Blit(cmd, cameraColorTarget, tmpRenderTargetHandle, material);
-        Blit(cmd, tmpRenderTargetHandle, cameraColorTarget);
-        // MEMO : この例だとBlit(cmd, ref renderingData, material);の方が好ましい
-#else
-        cmd.GetTemporaryRT(tmpRenderTargetHandle.id, descriptor);
-        cmd.Blit(cameraColorTarget, tmpRenderTargetHandle.Identifier(), material);
-        cmd.Blit(tmpRenderTargetHandle.Identifier(), cameraColorTarget);
-        cmd.ReleaseTemporaryRT(tmpRenderTargetHandle.id);
-#endif
+    public void Dispose()
+    {
+        CoreUtils.Destroy(material);
+        tmpRenderTargetHandle?.Release();
+        cameraColorTarget?.Release();
     }
-
-    context.ExecuteCommandBuffer(cmd);
-    CommandBufferPool.Release(cmd);
-}
+#endif
 }
