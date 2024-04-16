@@ -12,11 +12,19 @@ Shader "GrayScale"
         Pass
         {
             HLSLPROGRAM
-            #pragma vertex vert
+                #if UNITY_VERSION < 202220
+                    // FxaaVaryingsを使用する
+                    #pragma vertex vert
+                #else
+                    // Blit.hlslのものを使用する
+                    #pragma vertex Vert
+                #endif
             #pragma fragment frag
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            // #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
+            #if UNITY_VERSION >= 202220
+                #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
+            #endif
 
             struct Attributes
             {
