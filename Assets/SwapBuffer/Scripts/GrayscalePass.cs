@@ -6,6 +6,8 @@ namespace SwapBuffer
 {
     public class GrayscalePass : ScriptableRenderPass
     {
+#if UNITY_6000_0_OR_NEWER
+#else
         private const string ProfilerTag = nameof(GrayscalePass);
 
         private readonly Material material;
@@ -49,5 +51,6 @@ namespace SwapBuffer
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
         }
+#endif
     }
 }
