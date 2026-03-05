@@ -21,12 +21,12 @@ namespace Utility
 
         private void ChangeRenderPipeline()
         {
-            if (GraphicsSettings.renderPipelineAsset == renderPipelineAsset)
+            if (GraphicsSettings.defaultRenderPipeline == renderPipelineAsset)
             {
                 return;
             }
 
-            GraphicsSettings.renderPipelineAsset = renderPipelineAsset;
+            GraphicsSettings.defaultRenderPipeline = renderPipelineAsset;
         }
     }
 }
