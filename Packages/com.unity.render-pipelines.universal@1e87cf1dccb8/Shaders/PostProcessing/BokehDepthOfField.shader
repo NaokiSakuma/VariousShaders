@@ -18,6 +18,8 @@ Shader "Hidden/Universal Render Pipeline/BokehDepthOfField"
         TEXTURE2D_X(_DofTexture);
         TEXTURE2D_X(_FullCoCTexture);
 
+        TEXTURE2D_X_FLOAT(_TransparentDepthTexture);
+
         half4 _SourceSize;
         half4 _DownSampleScaleFactor;
         half4 _CoCParams;
@@ -34,7 +36,11 @@ Shader "Hidden/Universal Render Pipeline/BokehDepthOfField"
             UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
             float2 uv = UnityStereoTransformScreenSpaceTex(input.texcoord);
-            float depth = LOAD_TEXTURE2D_X(_CameraDepthTexture, _SourceSize.xy * uv).x;
+            float opaqueDepth = LOAD_TEXTURE2D_X(_CameraDepthTexture, _SourceSize.xy * uv).x;
+            float transparentDepth = LOAD_TEXTURE2D_X(_TransparentDepthTexture, _SourceSize.xy * uv).x;
+            float depth = lerp(opaqueDepth, transparentDepth, step(opaqueDepth, transparentDepth));
+            // debug
+            // depth = transparentDepth;
             float linearEyeDepth = LinearEyeDepth(depth, _ZBufferParams);
 
             half coc = (1.0 - FocusDist / linearEyeDepth) * MaxCoC;

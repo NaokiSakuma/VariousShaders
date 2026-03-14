@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
@@ -29,9 +30,11 @@ namespace TransparentDoF
             var sourceTextureHandle = resourceData.activeDepthTexture;
 
             var descriptor = renderGraph.GetTextureDesc(sourceTextureHandle);
-            descriptor.clearBuffer = true;
+            descriptor.clearBuffer = false;
             descriptor.msaaSamples = MSAASamples.None;
-            descriptor.name = "TransparentDepth";
+            descriptor.name = "_TransparentDepthTexture";
+            descriptor.depthBufferBits = DepthBits.Depth32;
+            // descriptor.colorFormat = GraphicsFormat.R32_SFloat;
 
             var textureHandle = renderGraph.CreateTexture(descriptor);
 
@@ -46,7 +49,9 @@ namespace TransparentDoF
                 builder.SetRenderAttachmentDepth(textureHandle, AccessFlags.Write);
                 builder.UseRendererList(rendererList);
                 builder.AllowGlobalStateModification(true);
+                builder.AllowPassCulling(false);
                 builder.SetGlobalTextureAfterPass(textureHandle, transparentDepthTextureID);
+
 
                 builder.SetRenderFunc(static (PassData data, RasterGraphContext context) =>
                 {
