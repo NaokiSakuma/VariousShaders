@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:zenn.dev)",
+      "WebFetch(domain:blog.sge-coretech.com)",
+      "Bash(find:*)"
+    ]
+  }
+}

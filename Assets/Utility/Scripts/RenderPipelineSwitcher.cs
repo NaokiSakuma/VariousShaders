@@ -23,7 +23,7 @@ namespace Utility
         {
             if (GraphicsSettings.defaultRenderPipeline == renderPipelineAsset)
             {
-                return;
+                // return;
             }
 
             GraphicsSettings.defaultRenderPipeline = renderPipelineAsset;
